@@ -1,0 +1,8 @@
+version: "3.9"
+services:
+  aprs-bot:
+    build: .
+    container_name: aprs-bot
+    restart: always
+    env_file:
+      - .env
