@@ -31,7 +31,7 @@ Bot de Telegram en español para consultar datos APRS (Automatic Packet Reportin
 
 1. Clona el repositorio:
 ```bash
-git clone https://github.com/tu-usuario/aprs-telegram-bot.git
+git clone https://github.com/marianograziano/aprs-telegram-bot.git
 cd aprs-telegram-bot
 ```
 
@@ -73,11 +73,6 @@ python bot.py
 - `TELEGRAM_TOKEN`: Token de tu bot de Telegram
 - `ADMIN_USER_ID`: IDs de usuarios admin (separados por comas)
 
-### Dashboard web
-
-El bot incluye un dashboard web para ver logs en tiempo real:
-- Ejecuta: `python web_dashboard.py`
-- Accede a: `http://localhost:5000`
 
 ## 📊 Funcionalidades adicionales
 
@@ -126,8 +121,8 @@ Las contribuciones son bienvenidas. Por favor:
 
 ## 📞 Soporte
 
-- Issues: [GitHub Issues](https://github.com/tu-usuario/aprs-telegram-bot/issues)
-- Contacto: tu-indicativo@qrz.com
+- Issues: [GitHub Issues](https://github.com/marianograziano/aprs-telegram-bot/issues)
+- Contacto: mariano.graziano@gmail.com
 
 ## 🙏 Créditos
 
