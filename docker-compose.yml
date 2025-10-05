@@ -12,7 +12,9 @@ services:
 
   # TrackDirect - Servidor APRS
   aprsc:
-    image: qvarforth/trackdirect-aprsc:latest
+    build:
+      context: ./trackdirect
+      dockerfile: trackdirect-aprsc.dockerfile
     container_name: trackdirect-aprsc
     volumes:
       - ./config/aprsc.conf:/opt/aprsc/etc/aprsc.conf
@@ -22,7 +24,9 @@ services:
 
   # TrackDirect - Recolector de datos
   collector:
-    image: qvarforth/trackdirect-python:latest
+    build:
+      context: ./trackdirect
+      dockerfile: trackdirect-python.dockerfile
     container_name: trackdirect-collector
     volumes:
       - ./config/trackdirect.ini:/root/trackdirect/config/trackdirect.ini
@@ -36,7 +40,9 @@ services:
 
   # TrackDirect - Servidor WebSocket
   websocket:
-    image: qvarforth/trackdirect-python:latest
+    build:
+      context: ./trackdirect
+      dockerfile: trackdirect-python.dockerfile
     container_name: trackdirect-websocket
     volumes:
       - ./config/trackdirect.ini:/root/trackdirect/config/trackdirect.ini
@@ -50,7 +56,9 @@ services:
 
   # TrackDirect - Tareas programadas
   cron:
-    image: qvarforth/trackdirect-cron:latest
+    build:
+      context: ./trackdirect
+      dockerfile: trackdirect-cron.dockerfile
     container_name: trackdirect-cron
     volumes:
       - ./config/trackdirect.ini:/root/trackdirect/config/trackdirect.ini
@@ -62,7 +70,9 @@ services:
 
   # TrackDirect - Servidor web
   web:
-    image: qvarforth/trackdirect-apache:latest
+    build:
+      context: ./trackdirect
+      dockerfile: trackdirect-apache.dockerfile
     container_name: trackdirect-web
     volumes:
       - ./config/trackdirect.ini:/root/trackdirect/config/trackdirect.ini
@@ -77,7 +87,9 @@ services:
 
   # Base de datos PostgreSQL
   db:
-    image: qvarforth/trackdirect-db:latest
+    build:
+      context: ./trackdirect
+      dockerfile: trackdirect-db.dockerfile
     container_name: trackdirect-db
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
