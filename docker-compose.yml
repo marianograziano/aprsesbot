@@ -1,8 +1,98 @@
 version: "3.9"
 services:
+  # Bot de Telegram APRS
   aprs-bot:
     build: .
     container_name: aprs-bot
     restart: always
     env_file:
       - .env
+    networks:
+      - aprs-network
+
+  # TrackDirect - Servidor APRS
+  aprsc:
+    image: qvarforth/trackdirect-aprsc:latest
+    container_name: trackdirect-aprsc
+    volumes:
+      - ./config/aprsc.conf:/opt/aprsc/etc/aprsc.conf
+    networks:
+      - aprs-network
+    restart: unless-stopped
+
+  # TrackDirect - Recolector de datos
+  collector:
+    image: qvarforth/trackdirect-python:latest
+    container_name: trackdirect-collector
+    volumes:
+      - ./config/trackdirect.ini:/root/trackdirect/config/trackdirect.ini
+    command: /root/trackdirect/server/scripts/collector.sh trackdirect.ini 0
+    depends_on:
+      - db
+      - aprsc
+    networks:
+      - aprs-network
+    restart: unless-stopped
+
+  # TrackDirect - Servidor WebSocket
+  websocket:
+    image: qvarforth/trackdirect-python:latest
+    container_name: trackdirect-websocket
+    volumes:
+      - ./config/trackdirect.ini:/root/trackdirect/config/trackdirect.ini
+    command: /root/trackdirect/server/scripts/wsserver.sh trackdirect.ini
+    depends_on:
+      - db
+      - aprsc
+    networks:
+      - aprs-network
+    restart: unless-stopped
+
+  # TrackDirect - Tareas programadas
+  cron:
+    image: qvarforth/trackdirect-cron:latest
+    container_name: trackdirect-cron
+    volumes:
+      - ./config/trackdirect.ini:/root/trackdirect/config/trackdirect.ini
+    depends_on:
+      - db
+    networks:
+      - aprs-network
+    restart: unless-stopped
+
+  # TrackDirect - Servidor web
+  web:
+    image: qvarforth/trackdirect-apache:latest
+    container_name: trackdirect-web
+    volumes:
+      - ./config/trackdirect.ini:/root/trackdirect/config/trackdirect.ini
+      - ./htdocs/public:/root/trackdirect/htdocs/public
+    ports:
+      - "80:80"
+    depends_on:
+      - db
+    networks:
+      - aprs-network
+    restart: unless-stopped
+
+  # Base de datos PostgreSQL
+  db:
+    image: qvarforth/trackdirect-db:latest
+    container_name: trackdirect-db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-trackdirect}
+      POSTGRES_DB: ${POSTGRES_DB:-trackdirect}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./config/postgresql.conf:/etc/postgresql/postgresql.conf
+    networks:
+      - aprs-network
+    restart: unless-stopped
+
+networks:
+  aprs-network:
+    driver: bridge
+
+volumes:
+  postgres-data:

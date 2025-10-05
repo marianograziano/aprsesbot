@@ -10,6 +10,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copiar código
 COPY bot.py .
+COPY trackdirect_db.py .
+COPY telegram_formatters.py .
+COPY stats_web.py .
 
 # Ejecutar
 CMD ["python", "bot.py"]
